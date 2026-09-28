@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "berkeDet"
+type: software
+version: "1.0.0"
+license: PolyForm-Noncommercial-1.0.0
+authors:
+  - family-names: "Gülmen"
+    given-names: "Berke"
+  - family-names: "Gülmen"
+    given-names: "Meryem"
+  - family-names: "Gülmen"
+    given-names: "Ömer"
+    orcid: "https://orcid.org/0009-0002-8017-5400"
+url: "https://detsignper.org"
+keywords:
+  - permutations
+  - lexicographic order
+  - permutation sign
+  - determinant
+  - data parallelism
+preferred-citation:
+  type: article
+  title: "berkeDet: data-parallel lexicographic permutation generation and streaming exact determinant evaluation via block replication and index mapping"
+  authors:
+    - family-names: "Gülmen"
+      given-names: "Berke"
+    - family-names: "Gülmen"
+      given-names: "Meryem"
+    - family-names: "Gülmen"
+      given-names: "Ömer"
+      orcid: "https://orcid.org/0009-0002-8017-5400"
+  year: 2026
+  doi: "10.5281/zenodo.21709734"
+  publisher:
+    name: "Zenodo"

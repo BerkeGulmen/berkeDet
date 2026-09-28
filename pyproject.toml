@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "berkeDet"
+version = "1.0.0"
+description = "Lexicographic permutations, their signs, and exact determinants by block replication and index mapping: meryemPer, meryemSign, berkeDet."
+readme = "README.md"
+license = "PolyForm-Noncommercial-1.0.0"
+license-files = ["LICENSE"]
+authors = [
+    { name = "Berke Gülmen" },
+    { name = "Meryem Gülmen" },
+    { name = "Ömer Gülmen", email = "gulmenberkemeryem@gmail.com" },
+]
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.21"]
+keywords = [
+    "permutations",
+    "lexicographic order",
+    "permutation sign",
+    "parity",
+    "determinant",
+    "Leibniz formula",
+    "combinatorics",
+    "data parallelism",
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: C",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+[project.optional-dependencies]
+test = ["pytest", "sympy"]
+
+[project.urls]
+Homepage = "https://detsignper.org"
+Preprint = "https://doi.org/10.5281/zenodo.21709734"
+Source = "https://github.com/BerkeGulmen/berkeDet"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["*.c"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.cibuildwheel]
+# CPython 3.9-3.14. Not yet: 3.15 (release candidate), free-threaded
+# builds, 32-bit, musllinux. Those users install from source.
+build = "cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
+skip = "*-musllinux_* *_i686 *-win32 *-win_arm64"
+test-requires = ["pytest", "sympy"]
+test-sources = ["tests"]
+test-command = "pytest tests -q -p no:cacheprovider"

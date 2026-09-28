@@ -1,0 +1,61 @@
+name: release
+
+# Publishing a GitHub Release builds, tests and uploads everything to PyPI.
+# "Run workflow" by hand builds and tests without uploading.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  wheels:
+    name: wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # each wheel is built and tested on its own hardware:
+        # Linux x86_64 and ARM, Windows x86_64, macOS Apple Silicon and Intel
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-latest, macos-15-intel]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pypa/cibuildwheel@v4.2.1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: wheels-${{ matrix.os }}
+          path: ./wheelhouse/*.whl
+
+  sdist:
+    name: source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: python -m pip install build && python -m build --sdist
+      - name: Install the source distribution itself and run the tests
+        run: |
+          python -m venv /tmp/check
+          /tmp/check/bin/pip install dist/*.tar.gz pytest sympy
+          cd tests
+          /tmp/check/bin/python -m pytest -q -p no:cacheprovider
+      - uses: actions/upload-artifact@v7
+        with:
+          name: sdist
+          path: dist/*.tar.gz
+
+  publish:
+    name: publish to PyPI
+    needs: [wheels, sdist]
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: pypa/gh-action-pypi-publish@release/v1
